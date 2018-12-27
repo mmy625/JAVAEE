@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<!-- 通过这个配置文件完成mybatis与数据库的连接 -->
+<configuration>
+	<!-- 引入 database.properties 文件 -->
+	<properties resource="database.properties" />
+
+
+	<settings>
+		<setting name="logImpl" value="LOG4J" />
+	</settings>
+	<!-- 实体类的别名配置 第一种：精确匹配，需要为每个实体类配置 第二种：通过包名模糊匹配，规则是包下面的所有实体类的别名为 类名 -->
+	<typeAliases>
+		<!-- <typeAlias type="com.kgc.pojo.User" alias="User" /> -->
+		<package name="com.kgc.pojo" />
+	</typeAliases>
+	
+	
+	<!-- 利用mybatis的分页插件 分页 start -->
+	<plugins>
+		<plugin interceptor="com.github.pagehelper.PageInterceptor">
+			<!-- 设置数据库类型 Oracle,Mysql,MariaDB,SQLite,Hsqldb,PostgreSQL六种数据库 -->
+			<property name="helperDialect" value="mysql" />
+		</plugin>
+	</plugins>
+	<!-- 利用mybatis的分页插件 分页 end -->
+	
+	
+	<environments default="development">
+		<environment id="development">
+			<!--配置事务管理，采用JDBC的事务管理 -->
+			<transactionManager type="JDBC"></transactionManager>
+			<!-- POOLED:mybatis自带的数据源，JNDI:基于tomcat的数据源 -->
+			<dataSource type="POOLED">
+				<property name="driver" value="${driver}" />
+				<property name="url" value="${url}" />
+				<property name="username" value="${user}" />
+				<property name="password" value="${password}" />
+			</dataSource>
+		</environment>
+	</environments>
+
+
+
+
+	<!-- 将mapper文件加入到配置文件中 -->
+	<mappers>
+
+
+		<mapper resource="mappers/UserMapper.xml" />
+		<!-- 注册RoleMapper映射接口 -->
+		<mapper class="com.kgc.dao.RoleMapper" />
+		<mapper class="com.kgc.dao.AddressMapper" />
+	</mappers>
+
+
+
+</configuration>

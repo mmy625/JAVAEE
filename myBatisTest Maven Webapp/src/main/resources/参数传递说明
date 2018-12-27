@@ -1,0 +1,52 @@
+几种多参数传递的方法。
+
+方法1：顺序传参法
+  public User selectUser(String name,int deptId);
+  <select id="selectUser" resultMap="userResultMap">
+  	select * from user 
+  	where userName=#{0} and dept_id = #{1}
+   </select>
+
+#{}里面的数字代表你传入参数的顺序。
+
+这种方法不建议使用，sql层表达不直观，且一旦顺序调整容易出错。
+
+方法2：@Param注解传参法
+
+	@Select("select * from smbms_role where roleName = #{role_Name} and roleCode = #{role_code}")
+    public List<Role> listRole(@Param("role_Name")String roleName,@Param("role_dode")String roleCode);
+#{}里面的名称对应的是注解 @Param括号里面修饰的名称。
+
+这种方法在参数不多的情况还是比较直观的，推荐使用。
+
+方法3：Map传参法
+ @Select("select * from smbms_role where roleName = #{roleName}")
+    public List<Role> listRoleForMap(Map<String, Object> map);
+    
+     Map  map = new HashMap<String,Object>();
+        map.put("roleName","系统管理员");
+       List list =  sqlSession.getMapper(RoleMapper.class).listRoleForMap(map);
+
+#{}里面的名称对应的是 Map里面的key名称。
+
+这种方法适合传递多个参数，且参数易变能灵活传递的情况。
+
+方法4：Java Bean传参法
+ @Select("select * from smbms_role where roleName = #{roleName} and roleCode = #{roleCode}")
+    public List<Role> listRoleForJavaBean(Role role);
+
+#{}里面的名称对应的是 User类里面的成员属性。
+
+这种方法很直观，但需要建一个实体类，扩展不容易，需要加属性，看情况使用。
+
+使用Mapper接口时参数传递方式
+Mybatis在使用Mapper接口进行编程时，其实底层是采用了动态代理机制，表面上是调用的Mapper接口，而实际上是通过动态代理调用的SqlSession的对应方法，如selectOne()，有兴趣的朋友可以查看DefaultSqlSession的getMapper()方法实现，其最终会获得一个代理了Mapper接口的MapperProxy对象。MapperProxy对象在调用Mapper接口方法时会把传递的参数做一个转换，然后把转换后的参数作为入参调用SqlSession对应的操作方法（如selectOne、insert等）。转换过程可以参考MapperMethod的execute()方法实现。简单来说是以下规则：
+1、如果传递过来是单参数，且没有以@Param注解进行命名，则直接将单参数作为真实的参数调用SqlSession的对应方法。
+2、如果传递过来的不是单参数或者是包含以@Param注解进行命名的参数，则会将对应的参数转换为一个Map进行传递。具体规则如下：
+      2.1、 会把对应的参数按照顺序以param1、param2、paramN这样的形式作为Key存入目标Map中，第一个参数是param1，第N个参数是paramN。
+      2.2、 如果参数是以@Param注解命名的参数，则以@Param指定的名称作为Key存入目标Map中。
+      2.3、 如果参数不是以@Param注解命名的，则按照顺序以0、1、N这样的形式作为Key存入目标Map中，第一个参数是0，第N个参数是N。
+
+总结
+
+以上就是这篇文章的全部内容了，希望本文的内容对大家的学习或者工作具有一定的参考学习价值，如果有疑问大家可以留言交流，谢谢大家对脚本之家的支持

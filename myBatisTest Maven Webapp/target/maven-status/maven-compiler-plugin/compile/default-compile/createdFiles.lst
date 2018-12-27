@@ -1,0 +1,13 @@
+com\kgc\dao\AddressMapper.class
+com\kgc\dao\AddressDynaSqlProvider.class
+com\kgc\pojo\User.class
+com\kgc\pojo\Bill.class
+com\kgc\util\MyBatisUtil.class
+com\kgc\dao\AddressDynaSqlProvider$2.class
+com\kgc\pojo\Address.class
+com\kgc\dao\AddressDynaSqlProvider$1.class
+com\kgc\pojo\Role.class
+com\kgc\dao\UserMapper.class
+com\kgc\dao\AddressDynaSqlProvider$3.class
+com\kgc\dao\RoleMapper.class
+com\kgc\pojo\Provider.class

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kgc.dao.UserMapper">
+
+	<!-- 当数据库中的字段信息与对象的属性不一致时需要通过resultMap来映射 -->
+	<resultMap type="User" id="userMap">
+		<result column="id" property="id" />
+		<result property="userCode" column="userCode" />
+		<result property="userName" column="userName" />
+		<result property="phone" column="phone" />
+		<result property="birthday" column="birthday" />
+		<result property="gender" column="gender" />
+		<result property="userRole" column="userRole" />
+		<result property="userRoleName" column="roleName"/>
+	</resultMap>
+
+	<!--公共的sql -->
+	<sql id="selectUser">
+		select * from smbms_user
+	</sql>
+
+	<!-- 根据角色id查询用户集合 -->
+	<select id="listUserByUserCode" parameterType="int" resultType="User">
+		select id as uid,* from  smbms_user  where userCode = #{roleId}
+
+	</select>
+
+	<!-- 查询用户表记录数 -->
+	<select id="count" resultType="int">
+		select count(1) as count from
+		smbms_user
+	</select>
+
+
+	<!-- 查询所有对象 -->
+	<select id="getUserList" parameterType="User" resultType="User">
+		SELECT
+		id as id ,userCode,userName,userPassword,gender, birthday
+		FROM
+		smbms_user
+		where gender =#{gender} and userName = #{userName}
+	</select>
+
+	<insert id="saveUser" useGeneratedKeys="true" keyProperty="id"
+		parameterType="com.kgc.pojo.User">
+		insert into smbms_user(userName)
+		values(#{userName});
+	</insert>
+	<!-- 查询单个对象 根据id -->
+	<select id="getUserById" parameterType="int" resultType="User">
+		SELECT
+		id ,userCode,userName,userPassword,gender, birthday FROM smbms_user
+		where id = #{id}
+	</select>
+
+	<!-- 根据name模糊查询 like 的2种用法： CONCAT('%',#{name},'%') -->
+	<select id="listUserLikeName" parameterType="User" resultType="User">
+		select id ,userCode,userName,userPassword,gender, birthday FROM
+		smbms_user
+		where userName like '%'||#{userName}||'%'
+
+	</select>
+
+	<!-- 结果集以map的方式返回 resultMap 对应的是resultMap 的ID -->
+	<select id="listUserResultMap" resultMap="userMap">
+		select * FROM
+		smbms_user
+	</select>
+
+
+	<!--查询单个用户对象 复用sql -->
+	<select id="getUserByIdForCommon" parameterType="int" resultMap="userMap">
+		<include refid="selectUser" />
+		where id =#{id}
+	</select>
+
+
+	<!-- 演示 一对一 association start -->
+	<resultMap type="Role" id="roleMap">
+		<id property="id" column="r_id" />
+		<result property="roleCode" column="roleCode" />
+		<result property="roleName" column="roleName" />
+	</resultMap>
+
+
+	<resultMap type="User" id="userRoleResult">
+		<id property="id" column="id" />
+		<result property="userCode" column="userCode" />
+		<result property="userName" column="userName" />
+		<result property="userRole" column="userRole" />
+		<association property="role" javaType="Role" resultMap="roleMap" />
+
+	</resultMap>
+	<!-- 根据用户表中角色id 和角色表做联表查询 -->
+	<select id="getUserListByRoleId" parameterType="Integer"
+		resultMap="userRoleResult">
+		select u.*,r.id as r_id,r.roleCode,r.roleName from
+		smbms_user u,smbms_role r
+		where u.userRole = #{userRoleId} and
+		u.userRole = r.id
+	</select>
+	<!-- 演示 association end -->
+
+
+	<!-- 演示 一对多 collection -->
+	<!-- 获取指定用户的地址列表(user表-address表：1对多关系) collection start -->
+	<resultMap type="User" id="userAddressResult">
+		<id property="id" column="id" />
+		<result property="userCode" column="userCode" />
+		<result property="userName" column="userName" />
+
+		<collection property="addressList" ofType="Address">
+			<id property="id" column="a_id" />
+			<result property="postCode" column="postCode" />
+			<result property="tel" column="tel" />
+			<result property="contact" column="contact" />
+			<result property="addressDesc" column="addressDesc" />
+		</collection>
+	</resultMap>
+	<!-- 根据用户id获得 此用户的多个地址 -->
+	<select id="getAddressListByUserId" parameterType="Integer"
+		resultMap="userAddressResult">
+		select u.*,a.id as
+		a_id,a.contact,a.addressDesc,a.postCode,a.tel
+		from smbms_user
+		u,smbms_address a where u.id = a.userId and u.id=#{userId}
+	</select>
+
+	<!-- 根据角色id 和用户name 查询，不需要查询对应的角色 -->
+	<select id="listUserByRoleIdAndUserName" parameterType="User"
+		resultMap="userMap">
+		select * from smbms_user where 1=1
+		<if test="userRole != null and userRole != 0">
+			and userRole = #{userRole}
+		</if>
+
+		<if test="userName != null and userName != ''">
+			and userName like CONCAT('%',#{userName},'%')
+		</if>
+	</select>
+
+	<!-- 修改用户信息 -->
+	<update id="modifyUser" parameterType="User">
+		update smbms_user
+		<set>
+			<if test="userCode != null">userCode=#{userCode},</if>
+			<if test="userName != null">userName=#{userName},</if>
+			<if test="userPassword != null">userPassword=#{userPassword},</if>
+			<if test="gender != null">gender=#{gender},</if>
+			<if test="birthday != null">birthday=#{birthday},</if>
+			<if test="phone != null">phone=#{phone},</if>
+			<if test="address != null">address=#{address},</if>
+			<if test="userRole != null">userRole=#{userRole},</if>
+			<if test="modifyBy != null">modifyBy=#{modifyBy},</if>
+			<if test="modifyDate != null">modifyDate=#{modifyDate}</if>
+		</set>
+		where id = #{id}
+	</update>
+
+	<!-- 测试foreach 传入的是List集合 -->
+	<select id="selectUserByListId" parameterType="list" resultMap="userMap">
+		<include refid="selectUser" />
+		<where>
+			<!-- collection:指定输入对象中的集合属性 item:每次遍历生成的对象 open:开始遍历时的拼接字符串 close:结束时拼接的字符串 
+				separator:遍历对象之间需要拼接的字符串 select * from user where 1=1 and (id=1 or id=2 or 
+				id=3) -->
+			<foreach collection="ids" item="id" open="and (" close=")"
+				separator="or">
+				id=#{id}
+			</foreach>
+		</where>
+
+	</select>
+
+
+	<select id="selectUserByArrayId" resultMap="userMap">
+		<include refid="selectUser" />
+		<where>
+			<!-- collection:指定输入对象中的集合属性 item:每次遍历生成的对象 open:开始遍历时的拼接字符串 close:结束时拼接的字符串 
+				separator:遍历对象之间需要拼接的字符串 select * from user where 1=1 and (id=1 or id=2 or 
+				id=3) -->
+			<foreach collection="ids" item="id" open="and (" close=")"
+				separator="or">
+				id=#{id}
+			</foreach>
+		</where>
+
+	</select>
+
+</mapper>
+
