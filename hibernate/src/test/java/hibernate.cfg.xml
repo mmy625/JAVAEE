@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+	<session-factory>
+		<!--数据库URL -->
+		<property name="connection.url">
+			jdbc:oracle:thin:@127.0.0.1:1521:orcl
+		</property>
+		<!--数据库用户 -->
+		<property name="connection.username">scott</property>
+		<!--数据库用户密码 -->
+		<property name="connection.password">tiger</property>
+		<!--数据库JDBC驱动 -->
+		<property name="connection.driver_class">
+			oracle.jdbc.driver.OracleDriver
+		</property>
+		<!--每个数据库都有其对应的Dialect以匹配其平台特性 -->
+		<property name="dialect">org.hibernate.dialect.Oracle10gDialect</property>
+		<!--指定当前session范围和上下文 -->
+		<property name="current_session_context_class">thread</property>
+		<!--是否将运行期生成的SQL输出到日志以供调试 -->
+		<property name="show_sql">true</property>
+		<!--是否格式化SQL -->
+		<property name="format_sql">true</property>
+		<mapping resource="cn/hibernatedemo/entity/Dept.hbm.xml"/>
+	</session-factory>
+
+
+</hibernate-configuration>
+

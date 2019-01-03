@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.kgc.entity.User" table="user">
+		<id name="id" type="java.lang.Integer" column="id">
+			<generator class="identity"></generator>
+		</id>
+		<!-- 直接使用property属性设置 -->
+		<property name="name" type="java.lang.String" column="name" />
+		<property name="password" type="java.lang.String" column="password" />
+		<property name="sex" type="java.lang.Integer" column="sex" />
+		<property name="year" type="java.lang.String" column="year" />
+	</class>
+</hibernate-mapping>
