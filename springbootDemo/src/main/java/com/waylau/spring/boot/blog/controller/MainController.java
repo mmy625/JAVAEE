@@ -1,15 +1,7 @@
 package com.waylau.spring.boot.blog.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.waylau.spring.boot.blog.domain.User;
-import com.waylau.spring.boot.blog.service.UserService;
 
 /**
  * 主页控制器.
@@ -21,8 +13,8 @@ import com.waylau.spring.boot.blog.service.UserService;
 public class MainController
 {
     
-    @Autowired
-    UserService userService;
+//    @Autowired
+//    UserService userService;
     
     @GetMapping("/")
     public String root()
@@ -60,35 +52,35 @@ public class MainController
         return "register";
     }
     
-    /**
-     * 注册用户 <一句话功能简述> <功能详细描述>
-     * 
-     * @param user
-     * @return
-     * @see [类、类#方法、类#成员]
-     */
-    @PostMapping("/register")
-    public String registerUser(User user)
-    {
-        userService.registerUser(user);
-        return "redirect:/login";
-    }
-    
-    
-    
-    
-    @GetMapping("/login-error")
-    public String loginError(Model model)
-    {
-        model.addAttribute("loginError", true);
-        model.addAttribute("errorMsg", "登录失败，用户名或者密码错误！");
-        return "login";
-    }
-    
-    @PostMapping("/from")
-    public String upload(@RequestParam("name") String name, @RequestParam("file") MultipartFile file)
-    {
-        return "register";
-    }
+//    /**
+//     * 注册用户 <一句话功能简述> <功能详细描述>
+//     * 
+//     * @param user
+//     * @return
+//     * @see [类、类#方法、类#成员]
+//     */
+//    @PostMapping("/register")
+//    public String registerUser(User user)
+//    {
+//        userService.registerUser(user);
+//        return "redirect:/login";
+//    }
+//    
+//    
+//    
+//    
+//    @GetMapping("/login-error")
+//    public String loginError(Model model)
+//    {
+//        model.addAttribute("loginError", true);
+//        model.addAttribute("errorMsg", "登录失败，用户名或者密码错误！");
+//        return "login";
+//    }
+//    
+//    @PostMapping("/from")
+//    public String upload(@RequestParam("name") String name, @RequestParam("file") MultipartFile file)
+//    {
+//        return "register";
+//    }
     
 }

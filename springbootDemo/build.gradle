@@ -26,9 +26,4 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	// 添加 Spring Data JPA 的依赖
-	compile('org.springframework.boot:spring-boot-starter-data-jpa')
-	
-	// 添加 MySQL 连接驱动的依赖
-	compile('mysql:mysql-connector-java:6.0.5')
 }

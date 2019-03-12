@@ -11,50 +11,70 @@ package com.waylau.spring.boot.blog.domain;
 public class User
 {
     
-    private Long id; // 实体的唯一标识
+    private int id;
     
-    private String name;
+    private String userName;
     
-    private String email;
+    private String password;
+    
+    private int age;
     
     public User()
     { // 无参数默认构造器
     }
     
-    public User(Long id, String name, String email)
+    public User(String userName, String password, int age)
     {
-        this.id = id;
-        this.name = name;
-        this.email = email;
+        super();
+        this.userName = userName;
+        this.password = password;
+        this.age = age;
     }
     
-    public Long getId()
+    public int getId()
     {
         return id;
     }
     
-    public void setId(Long id)
+    public void setId(int id)
     {
         this.id = id;
     }
     
-    public String getName()
+    public String getUserName()
     {
-        return name;
+        return userName;
     }
     
-    public void setName(String name)
+    public void setUserName(String userName)
     {
-        this.name = name;
+        this.userName = userName;
     }
     
-    public String getEmail()
+    public String getPassword()
     {
-        return email;
+        return password;
     }
     
-    public void setEmail(String email)
+    public void setPassword(String password)
     {
-        this.email = email;
+        this.password = password;
     }
+    
+    public int getAge()
+    {
+        return age;
+    }
+    
+    public void setAge(int age)
+    {
+        this.age = age;
+    }
+    
+    @Override
+    public String toString()
+    {
+        return "User [id=" + id + ", userName=" + userName + ", password=" + password + ", age=" + age + "]";
+    }
+    
 }
